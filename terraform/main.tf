@@ -4,6 +4,11 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+
+    snowflake = {
+      source  = "Snowflake-Labs/snowflake"
+      version = "~> 0.86"
+    }
   }
 
   backend "local" {}
@@ -11,7 +16,11 @@ terraform {
 
 provider "aws" {
   region  = var.region
-  profile = var.profile
+  profile = var.aws_profile
+}
+
+provider "snowflake" {
+  profile = var.snowflake_profile
 }
 
 # s3 bucket for data lake
@@ -54,4 +63,30 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_data_lake" {
       days = 120
     }
   }
+}
+
+### SNOWFLAKE RESOURCES
+resource "snowflake_database" "letterboxd_db" {
+  name     = "LETTERBOXD"
+  data_retention_time_in_days =  0
+}
+
+resource "snowflake_schema" "raw" {
+  database = snowflake_database.letterboxd_db.name
+  name     = "RAW"
+  data_retention_days = 0
+}
+
+resource "snowflake_schema" "staged" {
+  database = snowflake_database.letterboxd_db.name
+  name     = "STAGED"
+  data_retention_days = 0
+}
+
+resource "snowflake_warehouse" "letterboxd_wh" {
+  name           = "LETTERBOXD_WH"
+  warehouse_type = "STANDARD"
+  warehouse_size = "x-small"
+  auto_resume = true
+  auto_suspend= 3000
 }

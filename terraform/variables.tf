@@ -4,7 +4,7 @@ variable "region" {
   type        = string
 }
 
-variable "profile" {
+variable "aws_profile" {
   description = "Profile to be utilized in local AWS CLI configuration"
   default     = "default"
   type        = string
@@ -13,5 +13,11 @@ variable "profile" {
 variable "bucket_name" {
   description = "Name of S3 bucket; must be globally unique"
   default     = "letterboxd-data-kpde"
+  type        = string
+}
+
+variable "snowflake_profile" {
+  description = "Profile to be utilized in local Snowflake configuration"
+  default     = "default"
   type        = string
 }
