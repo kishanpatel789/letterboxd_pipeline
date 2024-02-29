@@ -11,19 +11,27 @@ import pyarrow.parquet as pq
 
 from pathlib import Path
 
+import logging
+import boto3
+from botocore.exceptions import ClientError
+import os
+
 # %%
 DIR_DATA = Path('../data')
-AWS_BUCKET = ''
+AWS_BUCKET = 'letterboxd-data-kpde'
 
 # %%
-schema_actors = pa.schema([
-    ('id', pa.int64()),
-    ('name', pa.string()),
-])
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-table = pv.read_csv(DIR_DATA / 'csv' / 'actors.csv')
-table = table.cast(schema_actors)
-pq.write_table(table, DIR_DATA / 'parquet' / 'actors.parquet')
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter(
+    "%(asctime)s - %(levelname)s - %(message)s", 
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
 
 # %%
 ingestion_map = {
@@ -113,14 +121,48 @@ ingestion_map = {
 # %%
 # convert csv to parquet
 for table_name, table_info in ingestion_map.items():
-    print(f"Converting '{table_name}'...")
+    logger.info(f"Converting '{table_name}'...")
 
     table = pv.read_csv(DIR_DATA / 'csv' / table_info['csv_file_name'])
     table = table.cast(table_info['schema'])
     pq.write_table(table, DIR_DATA / 'parquet' / table_info['parquet_file_name'])
 
-    print(f"    '{table_info['csv_file_name']}' converted to '{table_info['parquet_file_name']}'")
-    print(f"    {table.num_rows:,} records")
+    logger.info(f"    '{table_info['csv_file_name']}' converted to '{table_info['parquet_file_name']}'")
+    logger.info(f"    {table.num_rows:,} records")
+
+
+# %%
+# push parquet files to s3
+def upload_file_to_s3(file_name, bucket, object_name=None):
+    """Upload a file to an S3 bucket
+    Modified from https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-uploading-files.html
+
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(str(file_name), bucket, object_name)
+    except ClientError as e:
+        logger.error(e)
+        return False
+    return True
+
+for table_name, table_info in ingestion_map.items():
+    logger.info(f"Pushing '{table_name}'...")
+
+    _local_file_path = DIR_DATA / 'parquet' / table_info['parquet_file_name']
+    _s3_file_key = f"raw/{table_info['parquet_file_name']}"
+
+    upload_file_to_s3(_local_file_path, AWS_BUCKET, _s3_file_key)
 
 
 # %%
