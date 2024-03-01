@@ -69,3 +69,18 @@ resource "aws_secretsmanager_secret_version" "example" {
     }
   EOT
 }
+
+# glue resources
+resource "aws_glue_catalog_database" "glue_db" {
+  name = "letterboxd_db"
+}
+
+resource "aws_glue_crawler" "example" {
+  database_name = aws_glue_catalog_database.glue_db.name
+  name          = "letterboxd_crawler"
+  role          = "arn:aws:iam::655268872845:role/service-role/AWSGlueServiceRole"
+
+  s3_target {
+    path = "s3://${aws_s3_bucket.bucket_data_lake.bucket}/raw/"
+  }
+}
