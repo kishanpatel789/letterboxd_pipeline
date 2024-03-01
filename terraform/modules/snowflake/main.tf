@@ -13,19 +13,19 @@ provider "snowflake" {
 
 # database, schemas, warehouse
 resource "snowflake_database" "letterboxd_db" {
-  name     = "LETTERBOXD"
-  data_retention_time_in_days =  0
+  name                        = "LETTERBOXD"
+  data_retention_time_in_days = 0
 }
 
 resource "snowflake_schema" "raw" {
-  database = snowflake_database.letterboxd_db.name
-  name     = "RAW"
+  database            = snowflake_database.letterboxd_db.name
+  name                = "RAW"
   data_retention_days = 0
 }
 
 resource "snowflake_schema" "staged" {
-  database = snowflake_database.letterboxd_db.name
-  name     = "STAGED"
+  database            = snowflake_database.letterboxd_db.name
+  name                = "STAGED"
   data_retention_days = 0
 }
 
@@ -33,16 +33,17 @@ resource "snowflake_warehouse" "letterboxd_wh" {
   name           = "LETTERBOXD_WH"
   warehouse_type = "STANDARD"
   warehouse_size = "x-small"
-  auto_resume = true
-  auto_suspend= 3000
+  auto_resume    = true
+  auto_suspend   = 3000
 }
 
 # user and role
 resource "snowflake_user" "svc_letterboxd" {
-  name     = "SVC_LETTERBOXD"
-  password = var.service_user_password
-
-  default_warehouse       = snowflake_warehouse.letterboxd_wh.name
+  name              = "SVC_LETTERBOXD"
+  password          = var.service_user_password
+  default_warehouse = snowflake_warehouse.letterboxd_wh.name
+  default_role      = snowflake_role.svc_letterboxd_role.name
+  default_namespace = snowflake_database.letterboxd_db.name
 }
 
 resource "snowflake_role" "svc_letterboxd_role" {
@@ -78,7 +79,7 @@ resource "snowflake_grant_privileges_to_account_role" "table_privileges_raw" {
   on_schema_object {
     all {
       object_type_plural = "TABLES"
-      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\"" 
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
     }
   }
 }
@@ -89,7 +90,7 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_r
   on_schema_object {
     future {
       object_type_plural = "TABLES"
-      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\"" 
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
     }
   }
 }
@@ -100,7 +101,7 @@ resource "snowflake_grant_privileges_to_account_role" "table_privileges_staged" 
   on_schema_object {
     all {
       object_type_plural = "TABLES"
-      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\"" 
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
     }
   }
 }
@@ -111,7 +112,7 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_s
   on_schema_object {
     future {
       object_type_plural = "TABLES"
-      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\"" 
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
     }
   }
 }

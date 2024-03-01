@@ -19,7 +19,7 @@ module "aws" {
 
   snowflake_service_user_username = module.snowflake.snowflake_service_user_username
   snowflake_service_user_password = var.snowflake_service_user_password
-  snowflake_warehouse_name = module.snowflake.snowflake_warehouse_name
+  snowflake_warehouse_name        = module.snowflake.snowflake_warehouse_name
 }
 
 module "snowflake" {

@@ -18,18 +18,18 @@ variable "bucket_name" {
 
 variable "snowflake_service_user_username" {
   description = "Username of service user in Snowflake"
-  nullable = false
-  type = string
+  nullable    = false
+  type        = string
 }
 
 variable "snowflake_service_user_password" {
   description = "Password of service user in Snowflake"
-  nullable = false
-  type = string
+  nullable    = false
+  type        = string
 }
 
 variable "snowflake_warehouse_name" {
   description = "Name of virtual warehouse in Snowflake"
-  nullable = false
-  type = string
+  nullable    = false
+  type        = string
 }
