@@ -53,3 +53,19 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_data_lake" {
     }
   }
 }
+
+# secrets manager for snowflake service user
+resource "aws_secretsmanager_secret" "snowflake_service_user" {
+  name = "letterboxd_snowflake_service_user"
+}
+
+resource "aws_secretsmanager_secret_version" "example" {
+  secret_id     = aws_secretsmanager_secret.snowflake_service_user.id
+  secret_string = <<-EOT
+    {
+      "sfUser": "${var.snowflake_service_user_username}",
+      "sfPassword": "${var.snowflake_service_user_password}",
+      "sfWarehouse": "${var.snowflake_warehouse_name}"
+    }
+  EOT
+}
