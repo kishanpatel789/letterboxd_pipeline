@@ -2,3 +2,4 @@ data/*
 scratch*
 .terraform*
 *.tfstate*
+.env

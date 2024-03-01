@@ -11,6 +11,7 @@ provider "snowflake" {
   profile = var.snowflake_profile
 }
 
+# database, schemas, warehouse
 resource "snowflake_database" "letterboxd_db" {
   name     = "LETTERBOXD"
   data_retention_time_in_days =  0
@@ -34,4 +35,83 @@ resource "snowflake_warehouse" "letterboxd_wh" {
   warehouse_size = "x-small"
   auto_resume = true
   auto_suspend= 3000
+}
+
+# user and role
+resource "snowflake_user" "svc_letterboxd" {
+  name     = "SVC_LETTERBOXD"
+  password = var.service_user_password
+
+  default_warehouse       = snowflake_warehouse.letterboxd_wh.name
+}
+
+resource "snowflake_role" "svc_letterboxd_role" {
+  name = "SVC_LETTERBOXD_ROLE"
+}
+
+resource "snowflake_grant_account_role" "grant_role" {
+  role_name = snowflake_role.svc_letterboxd_role.name
+  user_name = snowflake_user.svc_letterboxd.name
+}
+
+# role privileges
+resource "snowflake_grant_privileges_to_account_role" "db_usage" {
+  privileges        = ["USAGE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = snowflake_database.letterboxd_db.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "schema_usage" {
+  privileges        = ["USAGE", "MODIFY", "CREATE TABLE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema {
+    all_schemas_in_database = snowflake_database.letterboxd_db.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_raw" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    all {
+      object_type_plural = "TABLES"
+      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\"" 
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_raw" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\"" 
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_staged" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    all {
+      object_type_plural = "TABLES"
+      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\"" 
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_staged" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\"" 
+    }
+  }
 }

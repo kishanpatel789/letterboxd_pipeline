@@ -20,4 +20,6 @@ module "aws" {
 
 module "snowflake" {
   source = "./modules/snowflake"
+
+  service_user_password = var.snowflake_service_user_password
 }
