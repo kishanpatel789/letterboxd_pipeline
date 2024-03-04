@@ -116,3 +116,12 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_s
     }
   }
 }
+
+resource "snowflake_grant_privileges_to_account_role" "warehouse_privileges" {
+  privileges = ["USAGE"]
+  account_role_name  = snowflake_role.svc_letterboxd_role.name
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = snowflake_warehouse.letterboxd_wh.name
+  }
+}
