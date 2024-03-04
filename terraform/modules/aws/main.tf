@@ -57,6 +57,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_data_lake" {
 # secrets manager for snowflake service user
 resource "aws_secretsmanager_secret" "snowflake_service_user" {
   name = "letterboxd_snowflake_service_user"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "example" {
