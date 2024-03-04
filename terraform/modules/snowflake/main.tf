@@ -34,7 +34,7 @@ resource "snowflake_warehouse" "letterboxd_wh" {
   warehouse_type = "STANDARD"
   warehouse_size = "x-small"
   auto_resume    = true
-  auto_suspend   = 3000
+  auto_suspend   = 1200
 }
 
 # user and role
@@ -55,7 +55,7 @@ resource "snowflake_grant_account_role" "grant_role" {
   user_name = snowflake_user.svc_letterboxd.name
 }
 
-# role privileges
+# service role privileges
 resource "snowflake_grant_privileges_to_account_role" "db_usage" {
   privileges        = ["USAGE"]
   account_role_name = snowflake_role.svc_letterboxd_role.name
@@ -123,5 +123,50 @@ resource "snowflake_grant_privileges_to_account_role" "warehouse_privileges" {
   on_account_object {
     object_type = "WAREHOUSE"
     object_name = snowflake_warehouse.letterboxd_wh.name
+  }
+}
+
+# sysadmin privileges
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_raw_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    all {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_raw_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_staged_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    all {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_staged_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
+    }
   }
 }
