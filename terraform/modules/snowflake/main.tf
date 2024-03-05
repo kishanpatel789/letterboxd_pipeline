@@ -170,3 +170,47 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_s
     }
   }
 }
+
+resource "snowflake_grant_privileges_to_account_role" "view_privileges_raw_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    all {
+      object_type_plural = "VIEWS"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_view_privileges_raw_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    future {
+      object_type_plural = "VIEWS"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "view_privileges_staged_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    all {
+      object_type_plural = "VIEWS"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_view_privileges_staged_sysadmin" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = "SYSADMIN"
+  on_schema_object {
+    future {
+      object_type_plural = "VIEWS"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.staged.name}\""
+    }
+  }
+}
