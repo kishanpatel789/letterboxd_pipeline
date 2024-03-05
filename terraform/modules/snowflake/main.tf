@@ -66,7 +66,7 @@ resource "snowflake_grant_privileges_to_account_role" "db_usage" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "schema_usage" {
-  privileges        = ["USAGE", "MODIFY", "CREATE TABLE"]
+  privileges        = ["USAGE", "MODIFY", "CREATE TABLE", "CREATE VIEW"]
   account_role_name = snowflake_role.svc_letterboxd_role.name
   on_schema {
     all_schemas_in_database = snowflake_database.letterboxd_db.name
