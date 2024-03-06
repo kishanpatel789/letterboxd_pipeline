@@ -28,7 +28,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 models:
   letterboxd_pipeline:
-    staging:
+    staged:
       +materialized: view
+      +schema: 'STAGED'
     main:
       +materialized: table
+      +schema: 'MAIN'
