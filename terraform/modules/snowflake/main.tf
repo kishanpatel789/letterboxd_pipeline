@@ -29,6 +29,12 @@ resource "snowflake_schema" "staged" {
   data_retention_days = 0
 }
 
+resource "snowflake_schema" "main" {
+  database            = snowflake_database.letterboxd_db.name
+  name                = "MAIN"
+  data_retention_days = 0
+}
+
 resource "snowflake_warehouse" "letterboxd_wh" {
   name           = "LETTERBOXD_WH"
   warehouse_type = "STANDARD"
@@ -117,6 +123,28 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_s
   }
 }
 
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_main" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    all {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.main.name}\""
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_main" {
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  account_role_name = snowflake_role.svc_letterboxd_role.name
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.main.name}\""
+    }
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "warehouse_privileges" {
   privileges = ["USAGE"]
   account_role_name  = snowflake_role.svc_letterboxd_role.name
@@ -171,24 +199,24 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_s
   }
 }
 
-resource "snowflake_grant_privileges_to_account_role" "view_privileges_raw_sysadmin" {
+resource "snowflake_grant_privileges_to_account_role" "table_privileges_main_sysadmin" {
   privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   account_role_name = "SYSADMIN"
   on_schema_object {
     all {
-      object_type_plural = "VIEWS"
-      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.main.name}\""
     }
   }
 }
 
-resource "snowflake_grant_privileges_to_account_role" "future_view_privileges_raw_sysadmin" {
+resource "snowflake_grant_privileges_to_account_role" "future_table_privileges_main_sysadmin" {
   privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   account_role_name = "SYSADMIN"
   on_schema_object {
     future {
-      object_type_plural = "VIEWS"
-      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.raw.name}\""
+      object_type_plural = "TABLES"
+      in_schema          = "\"${snowflake_database.letterboxd_db.name}\".\"${snowflake_schema.main.name}\""
     }
   }
 }
