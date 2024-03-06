@@ -1,0 +1,128 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw data ingested as parquet files"
+    schema: raw
+    tables:
+      - name: actors
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: "Movie ID"
+            tests:
+              - not_null
+          - name: name
+            data_type: varchar
+            description: ""
+
+      - name: countries
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: country
+            data_type: varchar
+            description: ""
+
+      - name: crew
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: role
+            data_type: varchar
+            description: ""
+          - name: name
+            data_type: varchar
+            description: ""
+
+      - name: genres
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: genre
+            data_type: varchar
+            description: ""
+
+      - name: languages
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: type
+            data_type: varchar
+            description: ""
+          - name: language
+            data_type: varchar
+            description: ""
+
+      - name: movies
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: name
+            data_type: varchar
+            description: ""
+          - name: date
+            data_type: number
+            description: ""
+          - name: tagline
+            data_type: varchar
+            description: ""
+          - name: description
+            data_type: varchar
+            description: ""
+          - name: minute
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+
+      - name: releases
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: country
+            data_type: varchar
+            description: ""
+          - name: date
+            data_type: date
+            description: ""
+          - name: type
+            data_type: varchar
+            description: ""
+          - name: rating
+            data_type: varchar
+            description: ""
+
+      - name: studios
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: studio
+            data_type: varchar
+            description: ""
+
+      - name: themes
+        description: ""
+        columns:
+          - name: id
+            data_type: number
+            description: ""
+          - name: theme
+            data_type: varchar
+            description: ""

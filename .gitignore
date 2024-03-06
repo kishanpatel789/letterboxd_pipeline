@@ -7,3 +7,4 @@ venv
 *logs*
 dbt/dbt_packages*
 dbt/target*
+dbt/package-lock.yml
