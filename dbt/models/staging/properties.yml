@@ -6,123 +6,140 @@ sources:
     schema: raw
     tables:
       - name: actors
-        description: ""
+        description: "actors who took part in the filming of films"
         columns:
           - name: id
             data_type: number
-            description: "Movie ID"
+            description: "movie identifier (foreign key)"
             tests:
               - not_null
           - name: name
             data_type: varchar
-            description: ""
+            description: "name of actor"
 
       - name: countries
-        description: ""
+        description: "countries represented in movie"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: country
             data_type: varchar
-            description: ""
+            description: "country"
 
       - name: crew
-        description: ""
+        description: "film crew associated with movie"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: role
             data_type: varchar
-            description: ""
+            description: "role in the film crew (director, screenwriter, etc.)"
           - name: name
             data_type: varchar
-            description: ""
+            description: "name of crew member"
 
       - name: genres
-        description: ""
+        description: "film genres associated with movie"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: genre
             data_type: varchar
-            description: ""
+            description: "genre"
 
       - name: languages
-        description: ""
+        description: "in which languages ​​the films were shot"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: type
             data_type: varchar
-            description: ""
+            description: "type (primary, conversational, etc.)"
           - name: language
             data_type: varchar
-            description: ""
+            description: "film language"
 
       - name: movies
-        description: ""
+        description: "basic information about films"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (primary key)"
+            tests:
+              - not_null
+              - unique
           - name: name
             data_type: varchar
-            description: ""
+            description: "the name of the film"
           - name: date
             data_type: number
-            description: ""
+            description: "year of release of the film"
           - name: tagline
             data_type: varchar
-            description: ""
+            description: "the slogan of the film"
           - name: description
             data_type: varchar
-            description: ""
+            description: "description of the film"
           - name: minute
             data_type: number
-            description: ""
+            description: "movie duration (in minutes)"
           - name: rating
             data_type: float
-            description: ""
+            description: "average rating of the film"
 
       - name: releases
-        description: ""
+        description: "movie releases"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: country
             data_type: varchar
-            description: ""
+            description: "release country"
           - name: date
             data_type: date
-            description: ""
+            description: "release date of the film"
           - name: type
             data_type: varchar
-            description: ""
+            description: "release type (theatrical, television, etc.) of the film"
           - name: rating
             data_type: varchar
-            description: ""
+            description: "age rating of the film"
 
       - name: studios
-        description: ""
+        description: "film studios associated with movie"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: studio
             data_type: varchar
-            description: ""
+            description: "film studio"
 
       - name: themes
-        description: ""
+        description: "themes in films"
         columns:
           - name: id
             data_type: number
-            description: ""
+            description: "movie identifier (foreign key)"
+            tests:
+              - not_null
           - name: theme
             data_type: varchar
-            description: ""
+            description: "a theme of the film"
