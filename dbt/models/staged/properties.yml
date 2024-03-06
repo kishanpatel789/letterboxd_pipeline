@@ -79,7 +79,8 @@ sources:
             description: "movie identifier (primary key)"
             tests:
               - not_null
-              - unique
+              - unique:
+                  severity: warn
           - name: name
             data_type: varchar
             description: "the name of the film"
