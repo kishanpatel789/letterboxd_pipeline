@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: movies_by_year_theme
+    description: "aggregation of movie statistics by release year and theme"
+    columns:
+      - name: date
+        data_type: number
+        description: "year of release of the film"
+        tests:
+          - not_null
+      - name: theme
+        data_type: varchar
+        description: "randomly selected theme of the film"
+      - name: cnt_movies
+        data_type: number
+        description: "number of movies with given year and theme"
+      - name: total_length_min
+        data_type: number
+        description: "total length of movies for given year and theme (in minutes)"
+      - name: cnt_movies_w_length
+        data_type: number
+        description: "number of movies with given year and theme with non-null length"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - date
+            - theme
+
+  - name: movies_by_year
+    description: "aggregation of movies by release year"
+    columns:
+      - name: date
+        data_type: number
+        description: "year of release of the film"
+      - name: cnt_movies
+        data_type: number
+        description: "number of movies"
+      - name: avg_length_min
+        data_type: number
+        description: "average length of movies"

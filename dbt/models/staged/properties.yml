@@ -144,3 +144,58 @@ sources:
           - name: theme
             data_type: varchar
             description: "a theme of the film"
+
+models:
+  - name: stg_movies
+    description: ""
+    columns:
+      - name: id
+        data_type: number
+        description: "movie identifier (primary key)"
+        tests:
+          - not_null
+          - unique:
+              severity: error
+      - name: name
+        data_type: varchar
+        description: "the name of the film"
+      - name: date
+        data_type: number
+        description: "year of release of the film"
+      - name: tagline
+        data_type: varchar
+        description: "the slogan of the film"
+      - name: description
+        data_type: varchar
+        description: "description of the film"
+      - name: minute
+        data_type: number
+        description: "movie duration (in minutes)"
+      - name: rating
+        data_type: float
+        description: "average rating of the film"
+
+  - name: stg_themes
+    description: ""
+    columns:
+      - name: id
+        data_type: number
+        description: "movie identifier (foreign key)"
+        tests:
+          - not_null
+      - name: theme
+        data_type: varchar
+        description: "a theme of the film"
+
+  - name: stg_theme_singles
+    description: ""
+    columns:
+      - name: id
+        data_type: number
+        description: "movie identifier (foreign key)"
+        tests:
+          - not_null
+          - unique
+      - name: theme
+        data_type: varchar
+        description: "randomly selected theme of the film"
