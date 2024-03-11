@@ -18,8 +18,8 @@ variable "bucket_name" {
 
 variable "glue_service_role_arn" {
   description = "ARN of GlueServiceRole"
-  nullable=false
-  type = string
+  nullable    = false
+  type        = string
 }
 
 variable "snowflake_service_user_username" {

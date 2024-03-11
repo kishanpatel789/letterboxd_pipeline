@@ -56,7 +56,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_data_lake" {
 
 # secrets manager for snowflake service user
 resource "aws_secretsmanager_secret" "snowflake_service_user" {
-  name = "letterboxd_snowflake_service_user"
+  name                    = "letterboxd_snowflake_service_user"
   recovery_window_in_days = 0
 }
 
@@ -76,12 +76,44 @@ resource "aws_glue_catalog_database" "glue_db" {
   name = "letterboxd_db"
 }
 
-resource "aws_glue_crawler" "example" {
+resource "aws_glue_crawler" "example" { # TODO: CHANGE RESOURCE NAME
   database_name = aws_glue_catalog_database.glue_db.name
   name          = "letterboxd_crawler"
   role          = var.glue_service_role_arn
 
   s3_target {
     path = "s3://${aws_s3_bucket.bucket_data_lake.bucket}/raw/"
+  }
+}
+
+resource "aws_glue_job" "glue_job" {
+  name              = "publish_letterboxd_to_snowflake_tf"
+  role_arn          = var.glue_service_role_arn
+  connections       = ["Snowflake_Letterboxd"]
+  glue_version      = "4.0"
+  max_retries       = 0
+  timeout           = 10
+  worker_type       = "G.1X"
+  number_of_workers = 2
+
+  command {
+    name            = "glueetl"
+    script_location = "s3://${aws_s3_bucket.bucket_data_lake.bucket}/scripts/publish_to_snowflake.py"
+    python_version  = "3"
+  }
+
+  execution_property {
+    max_concurrent_runs = 1
+  }
+
+  default_arguments = {
+    "--spark-event-logs-path"            = "s3://${aws_s3_bucket.bucket_data_lake.bucket}/sparkHistoryLogs/",
+    "--enable-job-insights"              = "false",
+    "--enable-glue-datacatalog"          = "true",
+    "--enable-continuous-cloudwatch-log" = "true",
+    "--job-bookmark-option"              = "job-bookmark-disable",
+    "--job-language"                     = "python",
+    "--TempDir"                          = "s3://${aws_s3_bucket.bucket_data_lake.bucket}/temporary/",
+    "--enable-auto-scaling"              = "true"
   }
 }
