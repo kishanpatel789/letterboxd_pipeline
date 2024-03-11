@@ -79,6 +79,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/raw_data_archive:/opt/airflow/raw_data_archive
+    - ${AIRFLOW_PROJ_DIR:-.}/scripts:/opt/airflow/scripts
     - ~/.aws:/home/airflow/.aws:ro
     - ~/.dbt:/home/airflow/.dbt:ro
   user: "${AIRFLOW_UID:-50000}:0"
