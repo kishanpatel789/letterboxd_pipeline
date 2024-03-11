@@ -8,3 +8,5 @@ venv
 dbt/dbt_packages*
 dbt/target*
 dbt/package-lock.yml
+__pycache__
+airflow/raw_data_archive/*
