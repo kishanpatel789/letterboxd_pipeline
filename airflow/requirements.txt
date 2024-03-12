@@ -2,3 +2,4 @@ pyarrow
 boto3
 dbt-snowflake
 apache-airflow-providers-amazon
+astronomer-cosmos
