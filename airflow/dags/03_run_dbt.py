@@ -1,6 +1,4 @@
-from cosmos.config import ProfileConfig
 from cosmos import DbtDag, ProjectConfig, ProfileConfig, ExecutionConfig
-from cosmos.profiles import PostgresUserPasswordProfileMapping
 import os
 import logging 
 from pathlib import Path

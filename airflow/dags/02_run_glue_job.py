@@ -2,12 +2,10 @@ from pathlib import Path
 
 import os
 import logging
-import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
 
 from airflow import DAG
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.operators.glue_crawler import GlueCrawlerOperator
