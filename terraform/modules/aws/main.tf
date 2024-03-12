@@ -76,7 +76,7 @@ resource "aws_glue_catalog_database" "glue_db" {
   name = "letterboxd_db"
 }
 
-resource "aws_glue_crawler" "example" { # TODO: CHANGE RESOURCE NAME
+resource "aws_glue_crawler" "glue_crawler" { 
   database_name = aws_glue_catalog_database.glue_db.name
   name          = "letterboxd_crawler"
   role          = var.glue_service_role_arn
