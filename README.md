@@ -16,7 +16,7 @@ Project Start: 2024.03.01
   - Google Looker Studio
 
 ## Data Source
-- [Letterboxd Dataset (Kaggle)](https://www.kaggle.com/datasets/gsimonx37/letterboxd): Movie data is extracted from [Letterboxd](https://letterboxd.com/) and [The Movie Database (TMDB)](https://www.themoviedb.org/). Letterboxd is a global social network for film discussion and discovery.
+- [Letterboxd Dataset (Kaggle)](https://www.kaggle.com/datasets/gsimonx37/letterboxd): Movie data is extracted from [Letterboxd](https://letterboxd.com/), a global social network for film discussion and discovery.
   - The dataset is hosted on Kaggle as a collection of 9 CSV files and over 700,000 movie posters. When compressed, the files make up 23.29 GB. 
   - The 9 CSV files represent movie details of over 896,000 movies released since 1874. The file `movies.csv` is the base source with each record representing one movie. The other 8 CSV files augment the base source with additional information: actors, countries, crew, genres, languages, releases, studios, and themes. 
   - The project makes use of the 9 CSV files while ignoring the poster images.  
@@ -40,10 +40,9 @@ Project Start: 2024.03.01
 - The dbt project is parsed and converted into Airflow DAGs via the [Astronomer Cosmos](https://www.astronomer.io/cosmos/) package. 
 ![dbt Models within Airflow](./images/dbtModelsInAirflow.png)
 
-
 ## Data Visualization
 - A simple dashboard that consumes the aggregated table in Snowflake can be found here: [Looker Studio Dashboard](https://lookerstudio.google.com/s/ongh3z7W-uA)
-<iframe width="800" height="450" src="https://lookerstudio.google.com/embed/reporting/dfa1db6c-c11e-448d-bd53-5321227b5e57/page/n9LsD" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+[![Dashboard Screenshot](./images/DashboardScreenshot.jpg)](https://lookerstudio.google.com/s/ongh3z7W-uA)
 
 ## Setup Instructions
 - Local Setup
