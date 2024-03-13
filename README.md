@@ -136,7 +136,7 @@ Project Start: 2024.03.01
 
 ## How to Run
 - After completing setup described above, go to the Airflow UI at `localhost:8080`. 
-- Execute the three DAGS in order:
+- Execute the three DAGs in order:
   - **01_ingest_data**: Extracts raw CSV files, converts to parquet, and pushes to S3 bucket under prefix "raw". 
   - **02_run_glue_job**: Uploads Glue script to S3, runs Glue crawler on the 9 parquet files in S3, runs Glue job to transfer parquet files to Snowflake's RAW schema. 
-  - **03_run_dbt**: Performs data quality tests and materializes Snowflake objects for analytical consumption. Cleansed data is presented as views in STAGED schema; aggregated data is presented as tables in MAIN schema.
+  - **03_run_dbt**: Performs data quality tests and materializes Snowflake objects for analytical consumption. Cleansed data are presented as views in STAGED schema; aggregated data are presented as tables in MAIN schema.
