@@ -10,3 +10,5 @@ dbt/target*
 dbt/package-lock.yml
 __pycache__
 airflow/raw_data_archive/*
+.DS_Store
+
